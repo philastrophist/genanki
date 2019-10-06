@@ -1,6 +1,3 @@
-#!/usr/bin/env python
-"""Test creating Cloze cards"""
-
 from genanki import Model
 from genanki import Note
 from genanki import Deck
@@ -39,23 +36,27 @@ MY_CLOZE_MODEL = Model(
   model_type=1)
 
 def test_cloze():
-  """Test Cloze model"""
   notes = []
   assert MY_CLOZE_MODEL.to_json(0, 0)["type"] == 1
 
   fields = ['NOTE ONE: {{c1::single deletion}}', '']
   my_cloze_note = Note(model=MY_CLOZE_MODEL, fields=fields)
-  assert {card.ord for card in my_cloze_note.cards} == {0}
+  assert [card.ord for card in my_cloze_note.cards] == [0]
   notes.append(my_cloze_note)
 
   fields = ['NOTE TWO: {{c1::1st deletion}} {{c2::2nd deletion}} {{c3::3rd deletion}}', '']
   my_cloze_note = Note(model=MY_CLOZE_MODEL, fields=fields)
-  assert {card.ord for card in my_cloze_note.cards} == {0, 1, 2}
+  assert sorted([card.ord for card in my_cloze_note.cards]) == [0, 1, 2]
   notes.append(my_cloze_note)
 
   fields = ['NOTE THREE: {{c1::1st deletion::C1-CLOZE}}', '']
   my_cloze_note = Note(model=MY_CLOZE_MODEL, fields=fields)
-  assert {card.ord for card in my_cloze_note.cards} == {0}
+  assert [card.ord for card in my_cloze_note.cards] == [0]
+  notes.append(my_cloze_note)
+
+  fields = ['NOTE FOUR: {{c1:1st deletion}} foo {{c2:2nd deletion}} bar {{c1::3rd deletion}}', '']
+  my_cloze_note = Note(model=MY_CLOZE_MODEL, fields=fields)
+  assert [card.ord for card in my_cloze_note.cards] == [0, 1]
   notes.append(my_cloze_note)
 
   deckname = 'mtherieau'
@@ -64,7 +65,3 @@ def test_cloze():
     deck.add_note(note)
   fout_anki = '{NAME}.apkg'.format(NAME=deckname)
   Package(deck).write_to_file(fout_anki)
-  print('  {N} WROTE: {APKG}'.format(N=len(notes), APKG=fout_anki))
-
-if __name__ == '__main__':
-  test_cloze()

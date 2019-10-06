@@ -2,9 +2,11 @@ from copy import copy
 from cached_property import cached_property
 import pystache
 import yaml
+from .util import FRONT_BACK, CLOZE
+
 
 class Model:
-  def __init__(self, model_id=None, name=None, fields=None, templates=None, css='', model_type=0):
+  def __init__(self, model_id=None, name=None, fields=None, templates=None, css='', model_type=FRONT_BACK):
     self.model_id = model_id
     self.name = name
     self.set_fields(fields)
@@ -111,3 +113,13 @@ class Model:
       "usn": -1,
       "vers": []
     }
+
+
+class FrontBackModel(Model):
+  def __init__(self, model_id=None, name=None, fields=None, templates=None, css=''):
+    super(FrontBackModel, self).__init__(model_id, name, fields, templates, css, FRONT_BACK)
+
+
+class ClozeModel(Model):
+  def __init__(self, model_id=None, name=None, fields=None, templates=None, css=''):
+    super(ClozeModel, self).__init__(model_id, name, fields, templates, css, CLOZE)

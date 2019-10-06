@@ -3,7 +3,7 @@ from .version import __version__
 
 from .card import Card
 from .deck import Deck
-from .model import Model
+from .model import Model, FrontBackModel, ClozeModel
 from .note import Note
 from .package import Package
 
